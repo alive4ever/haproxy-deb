@@ -1,0 +1,36 @@
+name: Building haproxy for armhf
+run-name: ${{ github.actor }} is building haproxy for armhf debian
+on: push
+
+jobs:
+  build-for-armhf:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Preparing chroot
+        id: preparing-chroot
+        run: |
+          sudo apt update
+          sudo apt upgrade -y
+          sudo apt install -y mmdebstrap qemu-user-static systemd-container debian-archive-keyring
+          sudo mmdebstrap --arch=armhf --include sudo,curl,build-essential,devscripts bookworm /var/lib/machines/armhf-debian
+          echo "Container successfully created"
+      - name: Preparing repository
+        uses: actions/checkout@v4
+      - name: Building haproxy
+        id: building_haproxy
+        run: |
+          cp -v ${{ github.workspace }}/prepare-build-chroot.sh /tmp/
+          cp -v ${{ github.workspace }}/build-haproxy.sh /tmp/
+          sudo systemd-nspawn --bind /tmp:/tmp/hosttmp --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-debian -- sh /tmp/hosttmp/prepare-build-chroot.sh
+          sudo systemd-nspawn --bind /tmp:/tmp/hosttmp --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-debian --user builder -- sh /tmp/hosttmp/build-haproxy.sh
+      - name: Uploading artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-package
+          path: /tmp/haproxy_deb/
+      - name: Creating release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            /tmp/haproxy_deb/*
