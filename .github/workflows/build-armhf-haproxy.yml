@@ -1,6 +1,9 @@
 name: Building haproxy for armhf
 run-name: ${{ github.actor }} is building haproxy for armhf debian
-on: push
+on:
+  push:
+    tags:
+      - '*'
 
 jobs:
   build-for-armhf:
