@@ -1,8 +1,9 @@
 export DEBFULLNAME="alive4ever"
 export DEBEMAIL="alive4ever@users.noreply.github.com"
-export HAPROXY_VERSION="3.0.9"
+export HAPROXY_VERSION="3.0.10"
 export PPA_VERSION="1ppa1~jammy"
 export BACKPORT_VERSION="1bpo1"
+export DEBIAN_FRONTEND="noninteractive"
 mkdir -p ~/build
 cd ~/build
 curl -L "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3d653970fbab0a890e4e4e9a0f14d8b0cf4efe96" | sudo tee /etc/apt/keyrings/haproxy-ppa.asc
