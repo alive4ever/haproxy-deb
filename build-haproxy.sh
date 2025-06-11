@@ -1,6 +1,6 @@
 export DEBFULLNAME="alive4ever"
 export DEBEMAIL="alive4ever@users.noreply.github.com"
-export HAPROXY_VERSION="3.0.10"
+export HAPROXY_VERSION="3.0.11"
 export PPA_VERSION="1ppa1~jammy"
 export BACKPORT_VERSION="1bpo1"
 export DEBIAN_FRONTEND="noninteractive"
